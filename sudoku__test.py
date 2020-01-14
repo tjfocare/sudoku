@@ -36,6 +36,23 @@ class TestIsEmpty(unittest.TestCase):
         self.assertTrue(is_empty(board, 8, 8))
 
 
+class TestIsInRow(unittest.TestCase):
+
+    def test_is_not_in_row(self):
+        self.assertFalse(is_in_row(board, 1, 0))
+
+    def test_is_in_row(board, self):
+        self.assertTrue(is_in_row(board, 3, 1))
+
+
+class TestIsInCol(unittest.TestCase):
+
+    def test_is_in_col(self):
+        self.assertTrue(is_in_col(board, 8, 0))
+
+    def test_is_not_in_col(self):
+        self.assertFalse(is_in_col(board, 4, 3))
+
 
 if __name__ == '__main__':
     unittest.main()
