@@ -27,23 +27,23 @@ for line in test:
 
 boards = np.reshape(boards, (-1, 9))
 
-board = boards[0:9, :]
+board = np.array(boards[0:9, :], int)
 
 # board = np.array([
 #     [x, x, x, x, x, x, x, x, x],
-#     [x, 8, 9, 1, 2, x, 4, 5, 6],
-#     [4, 5, 6, 7, 8, 9, 1, 2, 3],
-#     [3, 1, 2, 8, 4, 5, 9, 6, 7],
-#     [6, 9, 7, 3, 1, x, 8, 4, 5],
-#     [8, 4, 5, 6, 9, 7, 3, 1, 2],
-#     [2, 3, 1, 5, 7, x, 6, 9, 8],
-#     [9, 6, 8, 2, 3, 1, 5, 7, 4],
-#     [5, 7, 4, 9, 6, 8, 2, 3, x],
+#     [x, x, x, x, x, x, x, x, x],
+#     [x, x, x, x, x, x, x, x, x],
+#     [x, x, x, x, x, x, x, 6, x],
+#     [x, x, x, x, x, x, x, x, x],
+#     [x, x, x, x, x, 7, x, x, x],
+#     [x, x, x, x, x, x, x, x, x],
+#     [x, x, x, x, x, 1, x, x, x],
+#     [5, x, x, x, x, 8, 2, x, x],
 # ])
 
 
 def is_empty(bo, row, col):
-    return bo[row][col] == x
+    return int(bo[row][col]) == x
 
 
 def is_in_row(bo, num, row):
@@ -51,7 +51,7 @@ def is_in_row(bo, num, row):
 
 
 def is_in_col(bo, num, col):
-    return num in bo[:, col]
+    return np.isin(num, bo[:, col])
 
 
 def is_in_square(bo, num, row, col):
@@ -120,19 +120,22 @@ def solve_board(bo):
     next_empty = find_next_empty(bo)
 
     if (not next_empty):
-        print(bo)
+        print_board(bo)
         return True
     else:
         row, col = next_empty
 
+    # print('trying pos[' + str(row) + '][' + str(col) + ']')
     # try all numbers
     for testVal in range(1, 10):
+        # print(testVal)
         if (is_valid(bo, testVal, row, col)):
             # update board with new valid value
             bo[row][col] = testVal
-
+            # print_board(bo)
             # check if board is solved
             if (solve_board(bo)):
+                # print_board(bo)
                 return True
 
             bo[row][col] = x
