@@ -27,7 +27,13 @@ for line in test:
 
 boards = np.reshape(boards, (-1, 9))
 
-board = np.array(boards[0:9, :], int)
+# max 50
+board_no = 49
+
+# 0:9, 9:18, 18:27, 27:36
+board = np.array(boards[board_no * 9: board_no * 9 + 9, :], int)
+
+print(np.size(board))
 
 # board = np.array([
 #     [x, x, x, x, x, x, x, x, x],
