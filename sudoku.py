@@ -8,18 +8,38 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 
 x = 0
 
+# boards = open('./sudoku.txt', 'r')
 
-board = np.array([
-    [x, x, x, x, x, x, x, x, x],
-    [x, 8, 9, 1, 2, x, 4, 5, 6],
-    [4, 5, 6, 7, 8, 9, 1, 2, 3],
-    [3, 1, 2, 8, 4, 5, 9, 6, 7],
-    [6, 9, 7, 3, 1, x, 8, 4, 5],
-    [8, 4, 5, 6, 9, 7, 3, 1, 2],
-    [2, 3, 1, 5, 7, x, 6, 9, 8],
-    [9, 6, 8, 2, 3, 1, 5, 7, 4],
-    [5, 7, 4, 9, 6, 8, 2, 3, x],
-])
+boards = np.array([[]])
+
+test = open('./sudoku.txt', 'r').readlines()
+
+for line in test:
+    if (re.match('[A-Za-z]+\s[0-9]*', line)):
+        # print(line)
+        var = []
+    else:
+        if (re.match('[\n]', line[-1])):
+            grid_row = list(line)[:-1]
+        else:
+            grid_row = list(line)
+        boards = np.append(boards, grid_row)
+
+boards = np.reshape(boards, (-1, 9))
+
+board = boards[0:9, :]
+
+# board = np.array([
+#     [x, x, x, x, x, x, x, x, x],
+#     [x, 8, 9, 1, 2, x, 4, 5, 6],
+#     [4, 5, 6, 7, 8, 9, 1, 2, 3],
+#     [3, 1, 2, 8, 4, 5, 9, 6, 7],
+#     [6, 9, 7, 3, 1, x, 8, 4, 5],
+#     [8, 4, 5, 6, 9, 7, 3, 1, 2],
+#     [2, 3, 1, 5, 7, x, 6, 9, 8],
+#     [9, 6, 8, 2, 3, 1, 5, 7, 4],
+#     [5, 7, 4, 9, 6, 8, 2, 3, x],
+# ])
 
 
 def is_empty(bo, row, col):
