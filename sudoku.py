@@ -1,5 +1,9 @@
 import re
 
+import random
+
+import sys
+
 import warnings
 
 import numpy as np
@@ -8,17 +12,12 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 
 x = 0
 
-# boards = open('./sudoku.txt', 'r')
-
 boards = np.array([[]])
 
 test = open('./sudoku.txt', 'r').readlines()
 
 for line in test:
-    if (re.match('[A-Za-z]+\s[0-9]*', line)):
-        # print(line)
-        var = []
-    else:
+    if (not re.match('[A-Za-z]+\s[0-9]*', line)):
         if (re.match('[\n]', line[-1])):
             grid_row = list(line)[:-1]
         else:
@@ -28,7 +27,12 @@ for line in test:
 boards = np.reshape(boards, (-1, 9))
 
 # max 50
-board_no = 49
+if (len(sys.argv) > 1):
+    board_no = int(sys.argv[1])
+else:
+    board_no = random.randint(0, 49)
+
+print('puzzle no: ', board_no)
 
 # 0:9, 9:18, 18:27, 27:36
 board = np.array(boards[board_no * 9: board_no * 9 + 9, :], int)
