@@ -6,9 +6,7 @@ import numpy as np
 
 from sudoku import is_valid
 
-# TODO:
-# - update Sudoku to support Cell
-# - refactor cell and board to Board class
+from board import Board, Cell
 
 # Initialise window
 pygame.init()
@@ -19,50 +17,6 @@ win = pygame.display.set_mode((500, 500))
 font_width = 50
 font = pygame.font.SysFont('Comic Sans MS', font_width)
 
-# Board class
-
-
-class Board():
-    def __init__(self, bo):
-        self.bo = bo
-        self.size = np.size(bo)
-        self.selected_cell = ()
-
-    def get_board(self):
-        return self.bo
-
-    def get_col(self, col):
-        values = np.array([])
-        for cell in self.bo[:, col]:
-            np.append(values, cell.value)
-        return values
-
-    def get_row(self, row):
-        values = np.array([])
-        for cell in self.bo[row]:
-            np.append(values, cell.value)
-        return values
-
-    def get_selected_cell(self):
-        return self.selected_cell
-
-    def get_value(self, row, col):
-        return self.bo[row][col]
-
-    def check_selected(self, row, col):
-        return self.bo[row][col].is_selected
-
-    def set_board(self, updated_board):
-        self.bo = updated_board
-
-
-# Cell class
-class cell():
-    def __init__(self, value, is_selected=False):
-        self.empty = True if value == x else False
-        self.is_selected = is_selected
-        self.value = value
-
 
 """ Constants: TODO extract to file """
 
@@ -70,9 +24,9 @@ class cell():
 grid_size = 9
 # Text
 colour = (255, 255, 255)
-# Selected cell
+# Selected Cell
 colour_active = (255, 0, 0)
-# Empty cell - TODO: refactor Board class
+# Empty Cell - TODO: refactor Board class
 x = 0
 # Num
 
@@ -82,47 +36,31 @@ x = 0
 """ Globals """
 
 grid = np.array([
-    [cell(1), cell(2), cell(3), cell(x), cell(
-        x), cell(x), cell(x), cell(x), cell(x)],
-    [cell(x), cell(x), cell(4), cell(x), cell(
-        x), cell(x), cell(x), cell(x), cell(x)],
-    [cell(x), cell(x), cell(3), cell(x), cell(
-        x), cell(x), cell(x), cell(x), cell(x)],
-    [cell(x), cell(x), cell(2), cell(x), cell(
-        x), cell(x), cell(x), cell(6), cell(x)],
-    [cell(x), cell(x), cell(1), cell(x), cell(
-        x), cell(x), cell(x), cell(x), cell(x)],
-    [cell(x), cell(x), cell(x), cell(x), cell(
-        x), cell(7), cell(x), cell(x), cell(x)],
-    [cell(x), cell(x), cell(x), cell(x), cell(
-        x), cell(x), cell(x), cell(x), cell(x)],
-    [cell(x), cell(x), cell(x), cell(x), cell(
-        x), cell(1), cell(x), cell(x), cell(x)],
-    [cell(5), cell(x), cell(x), cell(x), cell(
-        x), cell(8), cell(2), cell(x), cell(x)],
+    [Cell(x), Cell(x), Cell(3), Cell(x), Cell(
+        2), Cell(x), Cell(6), Cell(x), Cell(x)],
+    [Cell(9), Cell(x), Cell(x), Cell(3), Cell(
+        x), Cell(5), Cell(x), Cell(x), Cell(1)],
+    [Cell(x), Cell(x), Cell(1), Cell(8), Cell(
+        x), Cell(6), Cell(4), Cell(x), Cell(x)],
+    [Cell(x), Cell(x), Cell(8), Cell(1), Cell(
+        x), Cell(2), Cell(9), Cell(x), Cell(x)],
+    [Cell(7), Cell(x), Cell(1), Cell(x), Cell(
+        x), Cell(x), Cell(x), Cell(x), Cell(8)],
+    [Cell(x), Cell(x), Cell(6), Cell(7), Cell(
+        x), Cell(8), Cell(2), Cell(x), Cell(x)],
+    [Cell(x), Cell(x), Cell(2), Cell(6), Cell(
+        x), Cell(9), Cell(5), Cell(x), Cell(x)],
+    [Cell(8), Cell(x), Cell(x), Cell(2), Cell(
+        x), Cell(3), Cell(x), Cell(x), Cell(9)],
+    [Cell(x), Cell(x), Cell(5), Cell(x), Cell(
+        1), Cell(x), Cell(3), Cell(x), Cell(x)],
 ])
 
 board = Board(grid)
 
 run = True
 
-selected_cell = ()
-
 """ End of Globals """
-
-# def reset_board(bo):
-
-
-def update_selected_cell(bo, except_pos):
-    global selected_cell
-    for i in range(0, 9):
-        for j in range(0, 9):
-            if (i == except_pos[0] and j == except_pos[1]):
-                bo[i][j].is_selected = True
-                selected_cell = (i, j)
-            else:
-                bo[i][j].is_selected = False
-    return bo
 
 
 def draw_grid():
@@ -141,22 +79,21 @@ def draw_grid():
 def draw_sudoku(bo):
     for i in range(0, 9):
         for j in range(0, 9):
-            print(bo.get_value(i, j))
-            # Set cell colour
+            # Set Cell colour
             if (bo.check_selected(i, j)):
                 number = font.render(
                     str(bo.get_value(i, j)), True, colour_active)
             else:
                 number = font.render(str(bo.get_value(i, j)), True, colour)
 
-            # print(number)
+            # print('val: ', i, j, str(bo.get_value(i, j)))
             grid_width = win.get_width() / 9
-            x_pos = grid_width / 2 + win.get_width() * i / 9 - font_width / 4
-            y_pos = grid_width / 2 + win.get_height() * j / 9 - font_width / 4
+            x_pos = grid_width / 2 + win.get_width() * j / 9 - font_width / 4
+            y_pos = grid_width / 2 + win.get_height() * i / 9 - font_width / 4
             win.blit(number, (x_pos, y_pos))
 
 
-def clicked_in_cell(click_pos):
+def clicked_in_Cell(click_pos):
     for i in range(0, 9):
         for j in range(0, 9):
             grid_left_edge = win.get_width() * i / 9
@@ -178,15 +115,16 @@ def handle_user_event(bo):
         if (event.type == pygame.QUIT):
             run = False
         elif (event.type == pygame.MOUSEBUTTONUP):
-            (row, col) = clicked_in_cell(pygame.mouse.get_pos())
+            (row, col) = clicked_in_Cell(pygame.mouse.get_pos())
             if (bo.get_value(row, col) == x):
-                bo.set_board(update_selected_cell(bo.get_board(), (row, col)))
+                updated_grid = bo.update_selected_cell((row, col))
+                bo.set_grid(updated_grid)
         elif (event.type == pygame.KEYDOWN):
-            print(selected_cell)
-            if (re.match('\d', selected_key := chr(event.key)) and selected_cell):
-                print('number input: ', selected_key)
-                # print('valid number: ', is_valid(
-                #     bo, selected_key, selected_cell[0], selected_cell[1]))
+            selected_key = chr(event.key)
+            if (re.match('\\d', selected_key) and bo.get_selected_cell):
+                (selected_row, selected_col) = bo.get_selected_cell()
+                print('valid number: ', is_valid(
+                    bo, selected_key, selected_row, selected_col))
 
 
 while (run):

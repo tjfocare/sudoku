@@ -8,6 +8,8 @@ import warnings
 
 import numpy as np
 
+from board import Board, Cell, TYPE
+
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 x = 0
@@ -51,15 +53,15 @@ else:
 
 
 def is_empty(bo, row, col):
-    return int(bo[row][col]) == x
+    return bo.get_value(row, col) == x
 
 
 def is_in_row(bo, num, row):
-    return np.isin(num, bo[row])
+    return int(num) in bo.get_row(row)
 
 
 def is_in_col(bo, num, col):
-    return np.isin(num, bo[:, col])
+    return int(num) in bo.get_col(col)
 
 
 def is_in_square(bo, num, row, col):
@@ -104,12 +106,17 @@ def is_in_square(bo, num, row, col):
         # bottom right
         window[row - 2:row + 1, col - 2:col + 1] = mask
 
-    square = np.array(np.multiply(bo, window), int)
+    square = np.array(np.multiply(bo.get_grid(TYPE.ARRAY), window), int)
 
     return np.isin(num, square)
 
 
 def is_valid(bo, num, row, col):
+
+    print('in row: ', is_in_row(bo, num, row))
+    print('in col: ', is_in_col(bo, num, col))
+    print('in square: ', is_in_square(bo, num, row, col))
+
     return ((not is_in_row(bo, num, row)) and
             (not is_in_col(bo, num, col)) and
             (not is_in_square(bo, num, row, col)))
@@ -133,17 +140,13 @@ def solve_board(bo):
     else:
         row, col = next_empty
 
-    # print('trying pos[' + str(row) + '][' + str(col) + ']')
     # try all numbers
     for testVal in range(1, 10):
-        # print(testVal)
         if (is_valid(bo, testVal, row, col)):
             # update board with new valid value
             bo[row][col] = testVal
-            # print_board(bo)
             # check if board is solved
             if (solve_board(bo)):
-                # print_board(bo)
                 return True
 
             bo[row][col] = x
@@ -159,11 +162,11 @@ def print_board(bo):
         for j in range(0, 9):
 
             if (j % 3 == 0):
-                row_string += ' | ' + str(bo[i][j])
+                row_string += ' | ' + str(bo.get_value(i, j))
             elif (j == 8):
-                row_string += ' ' + str(bo[i][j]) + ' |'
+                row_string += ' ' + str(bo.get_value(i, j)) + ' |'
             else:
-                row_string += ' ' + str(bo[i][j])
+                row_string += ' ' + str(bo.get_value(i, j))
 
         if (i == 8):
             row_string += '\n  ' + '- ' * 12
