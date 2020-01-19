@@ -32,12 +32,10 @@ if (len(sys.argv) > 1):
 else:
     board_no = random.randint(0, 49)
 
-print('puzzle no: ', board_no)
+# print('puzzle no: ', board_no)
 
 # 0:9, 9:18, 18:27, 27:36
-board = np.array(boards[board_no * 9: board_no * 9 + 9, :], int)
-
-print(np.size(board))
+# board = np.array(boards[board_no * 9: board_no * 9 + 9, :], int)
 
 # board = np.array([
 #     [x, x, x, x, x, x, x, x, x],
@@ -172,6 +170,6 @@ def print_board(bo):
         print(row_string)
 
 
-print('Sudoku...')
-print_board(board)
-solve_board(board)
+# print('Sudoku...')
+# print_board(board)
+# solve_board(board)
