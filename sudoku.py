@@ -10,7 +10,7 @@ import numpy as np
 
 from board import Board, Cell, TYPE
 
-warnings.simplefilter(action='ignore', category=FutureWarning)
+# warnings.simplefilter(action='ignore', category=FutureWarning)
 
 x = 0
 
@@ -38,19 +38,6 @@ else:
 
 # 0:9, 9:18, 18:27, 27:36
 # board = np.array(boards[board_no * 9: board_no * 9 + 9, :], int)
-
-# board = np.array([
-#     [x, x, x, x, x, x, x, x, x],
-#     [x, x, x, x, x, x, x, x, x],
-#     [x, x, x, x, x, x, x, x, x],
-#     [x, x, x, x, x, x, x, 6, x],
-#     [x, x, x, x, x, x, x, x, x],
-#     [x, x, x, x, x, 7, x, x, x],
-#     [x, x, x, x, x, x, x, x, x],
-#     [x, x, x, x, x, 1, x, x, x],
-#     [5, x, x, x, x, 8, 2, x, x],
-# ])
-
 
 def is_empty(bo, row, col):
     return bo.get_value(row, col) == x
@@ -112,11 +99,6 @@ def is_in_square(bo, num, row, col):
 
 
 def is_valid(bo, num, row, col):
-
-    print('in row: ', is_in_row(bo, num, row))
-    print('in col: ', is_in_col(bo, num, col))
-    print('in square: ', is_in_square(bo, num, row, col))
-
     return ((not is_in_row(bo, num, row)) and
             (not is_in_col(bo, num, col)) and
             (not is_in_square(bo, num, row, col)))

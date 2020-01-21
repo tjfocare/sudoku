@@ -61,6 +61,10 @@ class Board():
     def check_selected(self, row, col):
         return self.grid[row][col].is_selected
 
+    def set_cell(self, num, row, col):
+        self.grid[row][col].value = int(num)
+        return self.grid
+
     def set_grid(self, updated_grid):
         self.grid = updated_grid
 
@@ -73,6 +77,11 @@ class Board():
                 else:
                     self.grid[i][j].is_selected = False
         return self.grid
+
+    def print_cell(self, cell):
+        row_string = 'empty: ' + cell.empty + ', '
+        row_string += 'selected: ' + cell.is_selected + ', '
+        row_string += 'value: ' + cell.value + ', '
 
 
 # Cell class
