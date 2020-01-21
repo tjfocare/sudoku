@@ -53,6 +53,11 @@ class TestBoard(unittest.TestCase):
         res = self.board.get_row(0)
         self.assertEqual(res, actual)
 
+    def test_set_cell(self):
+        self.board.set_cell(5, 0, 0)
+        val = self.board.get_value(0, 0)
+        self.assertEqual(val, 5)
+
 
 class TestGuiLogic(unittest.TestCase):
 
