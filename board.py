@@ -65,6 +65,10 @@ class Board():
         self.grid[row][col].value = int(num)
         return self.grid
 
+    def toggle_empty(self, row, col):
+        current = self.grid[row][col].empty
+        self.grid[row][col].empty = not current
+
     def set_grid(self, updated_grid):
         self.grid = updated_grid
 

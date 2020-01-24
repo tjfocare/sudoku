@@ -39,6 +39,29 @@ else:
 # 0:9, 9:18, 18:27, 27:36
 # board = np.array(boards[board_no * 9: board_no * 9 + 9, :], int)
 
+grid = np.array([
+    [Cell(x), Cell(x), Cell(3), Cell(x), Cell(
+        2), Cell(x), Cell(6), Cell(x), Cell(x)],
+    [Cell(9), Cell(x), Cell(x), Cell(3), Cell(
+        x), Cell(5), Cell(x), Cell(x), Cell(1)],
+    [Cell(x), Cell(x), Cell(1), Cell(8), Cell(
+        x), Cell(6), Cell(4), Cell(x), Cell(x)],
+    [Cell(x), Cell(x), Cell(8), Cell(1), Cell(
+        x), Cell(2), Cell(9), Cell(x), Cell(x)],
+    [Cell(7), Cell(x), Cell(1), Cell(x), Cell(
+        x), Cell(x), Cell(x), Cell(x), Cell(8)],
+    [Cell(x), Cell(x), Cell(6), Cell(7), Cell(
+        x), Cell(8), Cell(2), Cell(x), Cell(x)],
+    [Cell(x), Cell(x), Cell(2), Cell(6), Cell(
+        x), Cell(9), Cell(5), Cell(x), Cell(x)],
+    [Cell(8), Cell(x), Cell(x), Cell(2), Cell(
+        x), Cell(3), Cell(x), Cell(x), Cell(9)],
+    [Cell(x), Cell(x), Cell(5), Cell(x), Cell(
+        1), Cell(x), Cell(3), Cell(x), Cell(x)],
+])
+
+board = Board(grid)
+
 def is_empty(bo, row, col):
     return bo.get_value(row, col) == x
 
@@ -117,6 +140,7 @@ def solve_board(bo):
     next_empty = find_next_empty(bo)
 
     if (not next_empty):
+        print('winner')
         print_board(bo)
         return True
     else:
@@ -126,12 +150,13 @@ def solve_board(bo):
     for testVal in range(1, 10):
         if (is_valid(bo, testVal, row, col)):
             # update board with new valid value
-            bo[row][col] = testVal
+            bo.set_cell(testVal, row, col)
             # check if board is solved
             if (solve_board(bo)):
                 return True
 
-            bo[row][col] = x
+            bo.set_cell(x, row, col)
+            bo.toggle_empty(row, col)
 
     return False
 
@@ -155,6 +180,6 @@ def print_board(bo):
         print(row_string)
 
 
-# print('Sudoku...')
-# print_board(board)
-# solve_board(board)
+print('Sudoku...')
+print_board(board)
+solve_board(board)
