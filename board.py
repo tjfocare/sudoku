@@ -1,8 +1,18 @@
 import enum
 
+import pygame
+
 import numpy as np
 
 x = 0
+
+font_width = 50
+
+colour_danger = (255, 0, 0)
+colour_info = (255, 255, 255)
+
+
+# font = pygame.font.SysFont(None, font_width)
 
 
 class TYPE(enum.Enum):
@@ -10,7 +20,13 @@ class TYPE(enum.Enum):
     GRID = 1
 
 
-class Board():
+def print_cell(cell):
+    row_string = 'empty: ' + cell.empty + ', '
+    row_string += 'selected: ' + cell.is_selected + ', '
+    row_string += 'value: ' + cell.value + ', '
+
+
+class Board:
     def __init__(self, grid):
         self.grid = grid
         self.size = np.size(grid)
@@ -22,16 +38,19 @@ class Board():
 
         for i in range(0, 9):
             for j in range(0, 9):
-                if (self.grid[i][j] != other.grid[i][j]):
+                if self.grid[i][j] != other.grid[i][j]:
                     return False
 
         return True
 
+    def draw_cell(self, win, row, col, font):
+        self.grid[row][col].draw(win, row, col, font)
+
     def get_grid(self, return_type=TYPE.GRID):
-        if (return_type == TYPE.GRID):
+        if return_type == TYPE.GRID:
             return self.grid
 
-        elif (return_type == TYPE.ARRAY):
+        elif return_type == TYPE.ARRAY:
             grid = []
             for i in range(0, 9):
                 row = []
@@ -61,8 +80,17 @@ class Board():
     def check_selected(self, row, col):
         return self.grid[row][col].is_selected
 
+    def check_finished(self):
+        for i in range(0, 9):
+            for j in range(0, 9):
+                if self.grid[i][j].value == x:
+                    return False
+
+        return True
+
     def set_cell(self, num, row, col):
         self.grid[row][col].value = int(num)
+        self.grid[row][col].is_selected = False
         return self.grid
 
     def toggle_empty(self, row, col):
@@ -72,25 +100,37 @@ class Board():
     def set_grid(self, updated_grid):
         self.grid = updated_grid
 
-    def update_selected_cell(self, except_pos):
+    def update_selected_cell(self, pos):
         for i in range(0, 9):
             for j in range(0, 9):
-                if (i == except_pos[0] and j == except_pos[1]):
+                if i == pos[0] and j == pos[1]:
                     self.grid[i][j].is_selected = True
                     self.selected_cell = (i, j)
                 else:
                     self.grid[i][j].is_selected = False
-        return self.grid
-
-    def print_cell(self, cell):
-        row_string = 'empty: ' + cell.empty + ', '
-        row_string += 'selected: ' + cell.is_selected + ', '
-        row_string += 'value: ' + cell.value + ', '
 
 
 # Cell class
-class Cell():
+class Cell:
     def __init__(self, value, is_selected=False):
+        # user-editable cells
         self.empty = True if value == x else False
         self.is_selected = is_selected
         self.value = value
+
+        self.value = value
+
+    def draw(self, win, row, col, font):
+        text_colour = colour_danger if self.is_selected else colour_info
+        number = font.render(str(self.value), True, text_colour)
+
+        grid_width = win.get_width() / 9
+        x_pos = grid_width / 2 + win.get_width() * col / 9 - font_width / 4
+        y_pos = grid_width / 2 + win.get_height() * row / 9 - font_width / 4
+
+        win.blit(number, (x_pos, y_pos))
+
+        # draw red outline
+        if self.is_selected:
+            pygame.draw.rect(win, colour_danger,
+                             (x_pos - font_width / 4, y_pos - font_width / 4, grid_width, grid_width), 3)

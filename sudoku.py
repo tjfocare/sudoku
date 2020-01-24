@@ -19,8 +19,8 @@ boards = np.array([[]])
 test = open('./sudoku.txt', 'r').readlines()
 
 for line in test:
-    if (not re.match('[A-Za-z]+\s[0-9]*', line)):
-        if (re.match('[\n]', line[-1])):
+    if not re.match('[A-Za-z]+\s[0-9]*', line):
+        if re.match('[\n]', line[-1]):
             grid_row = list(line)[:-1]
         else:
             grid_row = list(line)
@@ -29,7 +29,7 @@ for line in test:
 boards = np.reshape(boards, (-1, 9))
 
 # max 50
-if (len(sys.argv) > 1):
+if len(sys.argv) > 1:
     board_no = int(sys.argv[1])
 else:
     board_no = random.randint(0, 49)
@@ -62,6 +62,7 @@ grid = np.array([
 
 board = Board(grid)
 
+
 def is_empty(bo, row, col):
     return bo.get_value(row, col) == x
 
@@ -75,44 +76,43 @@ def is_in_col(bo, num, col):
 
 
 def is_in_square(bo, num, row, col):
-
     mask = np.ones(9).reshape(3, 3)
     window = np.zeros(81).reshape(9, 9)
     square = []
 
-    if (row % 3 == 0 and col % 3 == 0):
+    if row % 3 == 0 and col % 3 == 0:
         # top left
         window[row:row + 3, col:col + 3] = mask
 
-    elif (row % 3 == 0 and col % 3 == 1):
+    elif row % 3 == 0 and col % 3 == 1:
         # top middle
         window[row:row + 3, col - 1:col + 2] = mask
 
-    elif (row % 3 == 0 and col % 3 == 2):
+    elif row % 3 == 0 and col % 3 == 2:
         # top right
         window[row:row + 3, col - 2:col + 1] = mask
 
-    elif (row % 3 == 1 and col % 3 == 0):
+    elif row % 3 == 1 and col % 3 == 0:
         # middle left
         window[row - 1:row + 2, col:col + 3] = mask
 
-    elif (row % 3 == 1 and col % 3 == 1):
+    elif row % 3 == 1 and col % 3 == 1:
         # middle middle
         window[row - 1:row + 2, col - 1:col + 2] = mask
 
-    elif (row % 3 == 1 and col % 3 == 2):
+    elif row % 3 == 1 and col % 3 == 2:
         # middle right
         window[row - 1:row + 2, col - 2:col + 1] = mask
 
-    elif (row % 3 == 2 and col % 3 == 0):
+    elif row % 3 == 2 and col % 3 == 0:
         # bottom left
         window[row - 2:row + 1, col:col + 3] = mask
 
-    elif (row % 3 == 2 and col % 3 == 1):
+    elif row % 3 == 2 and col % 3 == 1:
         # bottom middle
         window[row - 2:row + 1, col - 1:col + 2] = mask
 
-    elif (row % 3 == 2 and col % 3 == 2):
+    elif row % 3 == 2 and col % 3 == 2:
         # bottom right
         window[row - 2:row + 1, col - 2:col + 1] = mask
 
@@ -121,7 +121,7 @@ def is_in_square(bo, num, row, col):
     return np.isin(num, square)
 
 
-def is_valid(bo, num, row, col):
+def is_valid_placement(bo, num, row, col):
     return ((not is_in_row(bo, num, row)) and
             (not is_in_col(bo, num, col)) and
             (not is_in_square(bo, num, row, col)))
@@ -130,16 +130,15 @@ def is_valid(bo, num, row, col):
 def find_next_empty(bo):
     for i in range(0, 9):
         for j in range(0, 9):
-            if (is_empty(bo, i, j)):
-                return (i, j)
+            if is_empty(bo, i, j):
+                return i, j
     return False
 
 
 def solve_board(bo):
-
     next_empty = find_next_empty(bo)
 
-    if (not next_empty):
+    if not next_empty:
         print('winner')
         print_board(bo)
         return True
@@ -148,11 +147,11 @@ def solve_board(bo):
 
     # try all numbers
     for testVal in range(1, 10):
-        if (is_valid(bo, testVal, row, col)):
+        if is_valid_placement(bo, testVal, row, col):
             # update board with new valid value
             bo.set_cell(testVal, row, col)
             # check if board is solved
-            if (solve_board(bo)):
+            if solve_board(bo):
                 return True
 
             bo.set_cell(x, row, col)
@@ -164,22 +163,22 @@ def solve_board(bo):
 def print_board(bo):
     for i in range(0, 9):
         row_string = ""
-        if (i % 3 == 0):
+        if i % 3 == 0:
             row_string += '  ' + '- ' * 12 + '\n'
         for j in range(0, 9):
 
-            if (j % 3 == 0):
+            if j % 3 == 0:
                 row_string += ' | ' + str(bo.get_value(i, j))
-            elif (j == 8):
+            elif j == 8:
                 row_string += ' ' + str(bo.get_value(i, j)) + ' |'
             else:
                 row_string += ' ' + str(bo.get_value(i, j))
 
-        if (i == 8):
+        if i == 8:
             row_string += '\n  ' + '- ' * 12
         print(row_string)
 
 
-print('Sudoku...')
-print_board(board)
-solve_board(board)
+# print('Sudoku...')
+# print_board(board)
+# solve_board(board)

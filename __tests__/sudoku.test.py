@@ -4,7 +4,7 @@ import numpy as np
 
 from board import Board, Cell
 
-from sudoku import is_empty, is_in_col, is_in_row, is_in_square, is_valid, print_board
+from sudoku import is_empty, is_in_col, is_in_row, is_in_square, is_valid_placement, print_board
 
 x = 0
 
@@ -150,10 +150,10 @@ class TestIsValid(unittest.TestCase):
         self.board = Board(grid)
 
     def test_is_valid_top_left(self):
-        self.assertTrue(is_valid(self.board, 5, 0, 0))
+        self.assertTrue(is_valid_placement(self.board, 5, 0, 0))
 
     def test_is_not_valid_top_left(self):
-        self.assertFalse(is_valid(self.board, 8, 0, 0))
+        self.assertFalse(is_valid_placement(self.board, 8, 0, 0))
 
 
 if __name__ == '__main__':
