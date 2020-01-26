@@ -134,13 +134,13 @@ class TestIsInSquare(unittest.TestCase):
     def test_is_in_mid_right(self):
         self.assertTrue(is_in_square(self.board, 9, 4, 7))
 
-    def test_is_in_boardttom_left(self):
+    def test_is_in_bottom_left(self):
         self.assertTrue(is_in_square(self.board, 5, 7, 2))
 
-    def test_is_in_boardttom_mid(self):
+    def test_is_in_bottom_mid(self):
         self.assertTrue(is_in_square(self.board, 9, 8, 4))
 
-    def test_is_in_boardttom_right(self):
+    def test_is_in_bottom_right(self):
         self.assertTrue(is_in_square(self.board, 3, 8, 8))
 
 

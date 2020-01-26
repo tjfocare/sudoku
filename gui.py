@@ -132,7 +132,7 @@ def handle_user_event(bo):
         elif event.type == pygame.MOUSEBUTTONUP:
             (row, col) = clicked_in_cell(pygame.mouse.get_pos())
 
-            if bo.get_value(row, col) == x:
+            if bo.check_empty(row, col):
                 updated_board.update_selected_cell((row, col))
                 # print_board(updated_board)
 
@@ -140,12 +140,17 @@ def handle_user_event(bo):
         elif event.type == pygame.KEYDOWN:
             selected_key = chr(event.key)
 
-            # digit keypress
+            # input number
             if re.match('\\d', selected_key) and bo.get_selected_cell:
                 (selected_row, selected_col) = bo.get_selected_cell()
 
                 if is_valid_placement(bo, selected_key, selected_row, selected_col):
                     updated_board.set_cell(selected_key, selected_row, selected_col)
+
+            # clear cell
+            elif selected_key == pygame.K_ESCAPE:
+                if bo.check_empty(row, col):
+                    updated_board.update_selected_cell(None)
 
     return updated_board
 
@@ -171,4 +176,4 @@ def main():
 # if __name__ == 'main':
 main()
 
-pygame.QUIT
+pygame.quit()

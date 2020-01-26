@@ -21,7 +21,7 @@ class TYPE(enum.Enum):
 
 
 def print_cell(cell):
-    row_string = 'empty: ' + cell.empty + ', '
+    row_string = 'touchable: ' + cell.touchable + ', '
     row_string += 'selected: ' + cell.is_selected + ', '
     row_string += 'value: ' + cell.value + ', '
 
@@ -80,6 +80,9 @@ class Board:
     def check_selected(self, row, col):
         return self.grid[row][col].is_selected
 
+    def is_editable(self, row, col):
+        return True if self.get_value(row, col) == x else False
+
     def check_finished(self):
         for i in range(0, 9):
             for j in range(0, 9):
@@ -91,33 +94,37 @@ class Board:
     def set_cell(self, num, row, col):
         self.grid[row][col].value = int(num)
         self.grid[row][col].is_selected = False
-        return self.grid
-
-    def toggle_empty(self, row, col):
-        current = self.grid[row][col].empty
-        self.grid[row][col].empty = not current
+        self.selected_cell = ()
 
     def set_grid(self, updated_grid):
         self.grid = updated_grid
 
+    # assumes cell is touchable and can be cleared
+    def clear_selected_cell(self):
+        row, col = self.selected_cell
+        self.grid[row][col] = Cell(x)
+        self.selected_cell = ()
+
     def update_selected_cell(self, pos):
         for i in range(0, 9):
             for j in range(0, 9):
-                if i == pos[0] and j == pos[1]:
-                    self.grid[i][j].is_selected = True
-                    self.selected_cell = (i, j)
-                else:
-                    self.grid[i][j].is_selected = False
+                self.grid[i][j].is_selected = False
+
+        if pos is not None:
+            row = pos[0]
+            col = pos[1]
+            self.grid[row][col].is_selected = True
+            self.selected_cell = (row, col)
+        else:
+            self.clear_selected_cell()
 
 
 # Cell class
 class Cell:
     def __init__(self, value, is_selected=False):
-        # user-editable cells
-        self.empty = True if value == x else False
+        # user-editable cells - shouldn't change
+        self.touchable = True if value == x else False
         self.is_selected = is_selected
-        self.value = value
-
         self.value = value
 
     def draw(self, win, row, col, font):
