@@ -72,6 +72,8 @@ class Board:
         return values
 
     def get_selected_cell(self):
+        if len(self.selected_cell) == 0:
+            return False
         return self.selected_cell
 
     def get_value(self, row, col):
