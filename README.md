@@ -1,5 +1,10 @@
 # Sudoku
 
+
+Install pipenv
+
+$ pipenv install
+
 ### Sudoku Solver (command-line)
   - - - - - - - - - - - - 
  | 0 0 3 | 0 2 0 | 6 0 0 |
